@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>教育产品部通用组件池--文档平台</title>
+  <meta name="keywords" content="snipaste, snip, screenshot, paste, pin, clipboard, productivity, help, documentation, docs">
+  <meta name="description" content="Snip & Paste">
+  <meta name="google-site-verification" content="-R8Ja0TPv2uw1XiaB1IBthIel4AeCpYvgpeHg4V85Lk" />
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/lib/themes/vue.css">
+  <link rel="stylesheet" href="./lib/res-base/css/style.css">
+  <link rel="stylesheet" href="./lib/res-base/css/icons.css">
+  <style type="text/css">
+    .markdown-section code  { white-space: pre-line; }
+    *{
+      box-sizing: content-box;
+    }
+    .ux-input , .ux-input2{
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+<script src="https://unpkg.com/markrun@0.3.0/browser/markrun.js"></script>
+<script src="./lib/regularjs/dist/regular.min.js"></script>
+<script src="./lib/nej/src/define.js?pro=/js/&pool=./lib/&mode=web"></script>
+<nav data-cloak>
+
+</nav>
+<div id="app"></div>
+</body>
+
+
+<script type="text/javascript">
+    var arr = [];
+
+    window.$docsify = {
+        repo: '',
+        name: '<img style="vertical-align: bottom" src="http://edu-image.nosdn.127.net/fda98de5-e849-4e4d-976f-334bd1fee1ac.jpg?imageView&quality=100" height="32px">教育产品部组件池文档',
+        loadSidebar: true,
+        MaxLevel: 2,
+        loadNavbar: true,
+        auto2top: true,
+        //routerMode: 'history', // default: 'hash'
+        alias: {
+            '/.*/_navbar.md': '/_navbar.md',
+            '/.*/_sidebar.md': '/_sidebar.md'
+        },
+        maxLevel: 4,
+        subMaxLevel:2,
+        search: {
+            maxAge: 86400000,
+            placeholder: {
+                '/': '搜索'
+            },
+            noData: {
+                '/': '找不到结果'
+            }
+        },
+        formatUpdated: '{YYYY}.{MM}.{DD} {HH}:{mm}',
+        ga: 'UA-89754315-2',
+        markdown: function (marked) {
+            return function (content) {
+                var xx = markrun(content, {
+                    markdownParser: marked,
+                    compile: {
+                        'js': function (source, data, info) {
+                            //setTimeout(function () {
+                                //arr.push(source)
+                            //}, 100);
+                            return {
+                                lang: 'js',
+                                source: source,
+                                code: ''
+                            }
+                        }
+                    }
+
+                })
+
+
+
+                return xx;
+            }
+        },
+
+        plugins: [
+            function(hook, vm) {
+                hook.beforeEach(function (html) {
+                    arr = [];
+                    html = html.replace(/(\{pool\}|pool\/)(component|module)-\w+\//ig , './');
+                    var xx = markrun(html, {
+                        markdownParser: marked,
+                        compile: {
+                            'js': function (source, data, info) {
+                                arr.push(source)
+                                return {
+                                    lang: 'js',
+                                    source: source,
+                                    code: ''
+                                }
+                            }
+                        }
+
+                    });
+
+                    return html
+                        + '\n----\n'
+                        + '【教育产品部组件池文档】Last modified {docsify-updated} '
+                }),
+                hook.doneEach(function(){
+                    arr.forEach(function (it) {
+                        var y = document.createElement('script');
+                        document.body.appendChild(y);
+                        y.textContent = it;
+                    })
+                })
+            }
+        ]
+    }
+
+</script>
+<script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
+<script src="//unpkg.com/docsify/lib/plugins/search.min.js"></script>
+<script src="//unpkg.com/docsify/lib/plugins/ga.min.js"></script>
+<script src="//unpkg.com/prismjs/components/prism-bash.min.js"></script>
+<script src="//unpkg.com/prismjs/components/prism-markdown.min.js"></script>
+<script src="//unpkg.com/prismjs/components/prism-nginx.min.js"></script>
+</html>

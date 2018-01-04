@@ -1,0 +1,2 @@
+- Component列表
+  - [<%= componentName %>](#/)
