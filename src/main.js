@@ -4,7 +4,11 @@ const rd  = require('rd');
 const lintPath = require('./lintPath.js');
 const genDoc2md  = require('./jsdoc2Md.js');
 const serveDoc  = require('./serveDoc.js');
+const fs = require('fs-extra');
 const prog = require('commander');
+
+const rootPath = process.cwd();
+const ReadMePath = rootPath + '/README.md';
 
 
 module.exports = function () {
@@ -18,21 +22,37 @@ module.exports = function () {
             .parse(process.argv);
 
 
-        // 同步遍历目录下的所有js文件
+        //单个组件提供本地预览环境
         if(prog.serveDoc){
             serveDoc();
-            return;
         }
 
-        rd.eachFileFilterSync('./src', /\.js$/, (f, s) => {
-            console.log('开始处理：【%s】' ,f);
-            if(prog.lintPath){
+        //检测并修复文档注释
+        if(prog.lintPath){
+            rd.eachFileFilterSync('./src', /\.js$/, (f, s) => {
+                console.log('开始处理：【%s】' ,f);
                 lintPath(f);
-            }
-            if(prog.genDoc && f.indexOf('component.js') > -1){
-                genDoc2md(f);
-            }
-        });
+            });
+        }
+
+        //生成api
+        if(prog.genDoc){
+
+            fs.readFile(ReadMePath, 'utf8' , (err, data) => {
+                if(data.indexOf('### API') > 0){
+                    data = data.slice(0 , data.indexOf('### API'));
+                }
+                fs.writeFile(ReadMePath , data + `\n### API\n`);
+            });
+
+            rd.eachFileFilterSync('./src', /\.js$/, (f, s) => {
+                if(f.indexOf('component.js') > -1){
+                    console.log('开始处理：【%s】' ,f);
+                    genDoc2md(f);
+                }
+            });
+        }
+
     }
 
     main();

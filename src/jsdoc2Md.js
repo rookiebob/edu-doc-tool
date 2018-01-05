@@ -5,21 +5,33 @@
 
 const jsdoc2md = require('jsdoc-to-markdown');
 const fs = require('fs');
+const Promise = require('bluebird');
 const rootPath = process.cwd();
 
+const ReadMePath = rootPath + '/README.md';
 
 const genDoc =  (filepath) => {
-    console.log('********************');
     jsdoc2md.render({ files: filepath }).then((f) => {
+        //console.log(f);
+        filterMd(f).then((new_f) =>{
+            extractApis(filepath , new_f);
+            extractEvents(filepath ,new_f);
+        }).catch((err) => console.error(err))
 
-        extractApis(f);
-        extractEvents(f);
+    })
+};
+
+//处理提取出来的md一些异常的情况
+const filterMd = (f) =>{
+    return new Promise((resolve) => {
+        const new_f = f.replace(/\\\|/g , '');
+        resolve(new_f);
     })
 };
 
 //过滤拿出component.js的数据api
-const extractApis = (f) => {
-    const reg = /####\snew.*\n+(.*\s+\n(\|.*\n)+)\n/i;
+const extractApis = (filepath , f) => {
+    const reg = /#(###\snew.*\n+(.*\s+\n)+(\|.*\n)+)\n/i;
     let apiString = '';
 
     //console.log(reg.test(f));
@@ -29,14 +41,14 @@ const extractApis = (f) => {
     }
     if(!apiString) return;
 
-    fs.appendFile(rootPath + '/README.md' , apiString , (err) => {
+    fs.appendFile(ReadMePath , apiString , (err) => {
         if (err) throw err;
-        console.log('apis append success!');
+        console.log(`【${filepath}】 apis append success!`);
     })
 };
 
 //过滤拿出component.js的event
-const extractEvents = (f) => {
+const extractEvents = (filepath ,f) => {
     const reg = /(###.*\n+\*\*Kind\*\*:\sevent.*(.*[\n\r\s])+)/i;
     let eventString = '';
 
@@ -48,9 +60,9 @@ const extractEvents = (f) => {
 
     if(!eventString) return;
 
-    fs.appendFile(rootPath + '/README.md' , eventString , (err) => {
+    fs.appendFile(ReadMePath , eventString , (err) => {
         if(err) throw err;
-        console.log('events append success!')
+        console.log(`【${filepath}】 events append success!`);
     })
 };
 
