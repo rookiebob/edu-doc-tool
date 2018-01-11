@@ -12,7 +12,9 @@ const ReadMePath = rootPath + '/README.md';
 
 const genDoc =  (filepath) => {
     jsdoc2md.render({ files: filepath }).then((f) => {
-        //console.log(f);
+        // if(filepath.includes("mask")){
+        //     console.log(f);
+        // }
         filterMd(f).then((new_f) =>{
             extractApis(filepath , new_f);
             extractEvents(filepath ,new_f);
@@ -34,7 +36,7 @@ const extractApis = (filepath , f) => {
     const reg = /#(###\snew.*\n+(.*\s+\n)+(\|.*\n)+)\n/i;
     let apiString = '';
 
-    //console.log(reg.test(f));
+    //console.log(`【${filepath}】 ${reg.test(f)}`);
 
     if(reg.test(f)){
         apiString = RegExp.$1;
