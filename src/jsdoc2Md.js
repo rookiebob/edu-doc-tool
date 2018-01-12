@@ -6,11 +6,57 @@
 const jsdoc2md = require('jsdoc-to-markdown');
 const fs = require('fs');
 const Promise = require('bluebird');
+const rd  = require('rd');
 const rootPath = process.cwd();
+const chalk = require('chalk');
 
 const ReadMePath = rootPath + '/README.md';
+const docConfigJson = rootPath + '/.docconfig.json';
 
-const genDoc =  (filepath) => {
+const genDoc2md = () => {
+
+    getDocConfig().then((result) => {
+        rd.eachFileFilterSync('./src', /\.js$/, (f, s) => {
+
+            if((!result && f.indexOf('component.js') > -1) ||
+                result && result.includes(f)
+            ){
+                console.log('开始处理：【%s】' ,f);
+                extractInfos(f);
+            }
+        });
+    }).catch((e) => {
+        console.error(e);
+    });
+
+}
+
+//读取用户的配置，如果存在.docconfig.json，优先读取配置，否则读取所有的component.js
+const getDocConfig = () => {
+    return new Promise((resolve) => {
+        fs.readFile(docConfigJson ,'utf8' ,(err, data) => {
+            let result = false;
+            if(data){
+                try{
+                    data = JSON.parse(data);
+                    result = (data.path && data.path.length>0)?data.path:false;
+                    if(result){
+                        console.log(chalk.green(`读取.docconfig.json的配置`));
+                    }
+                }catch(e){
+                    throw new Error(e);
+                }
+
+            }else{
+                console.log(chalk.green(`默认读取所有component.js文件，如有需求，请配置.docconfig.json的path路径！`));
+            }
+            resolve(result);
+        })
+    });
+
+
+}
+const extractInfos =  (filepath) => {
     jsdoc2md.render({ files: filepath }).then((f) => {
         // if(filepath.includes("mask")){
         //     console.log(f);
@@ -68,4 +114,4 @@ const extractEvents = (filepath ,f) => {
     })
 };
 
-module.exports = genDoc;
+module.exports = genDoc2md;

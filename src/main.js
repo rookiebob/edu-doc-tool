@@ -44,13 +44,8 @@ module.exports = function () {
                 }
                 fs.writeFile(ReadMePath , data + `\n### API\n`);
             });
+            genDoc2md();
 
-            rd.eachFileFilterSync('./src', /\.js$/, (f, s) => {
-                if(f.indexOf('component.js') > -1){
-                    console.log('开始处理：【%s】' ,f);
-                    genDoc2md(f);
-                }
-            });
         }
 
     }
