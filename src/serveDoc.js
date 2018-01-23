@@ -27,7 +27,13 @@ const genIndexHtml = () =>{
 
     ReadFile(IndexHtmlPath).then(
         (data) => {
-            fs.outputFileSync('./index.html', data);
+            const crtPath = process.cwd();
+            console.log(crtPath.split('/').pop());
+            const file = ejs.render(data, {
+                componentName: crtPath.split('/').pop()
+            });
+
+            fs.outputFileSync('./index.html', file);
             console.log("[%s] copy success!" ,IndexHtmlPath);
         },
         (err) =>{

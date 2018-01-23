@@ -12,9 +12,19 @@
         },
         "sourceType": "module"
     },
-    "plugins": [
-    ],
+    "plugins": [],
     "rules": {
-
+        "valid-jsdoc": [
+            "error",
+            {
+                "prefer": {
+                    "arg": "param",
+                    "argument": "param",
+                    "class": "constructor",
+                    "return": "returns",
+                    "virtual": "abstract"
+                }
+            }
+        ]
     }
 }

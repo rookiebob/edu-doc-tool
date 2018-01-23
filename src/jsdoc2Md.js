@@ -58,7 +58,8 @@ const getDocConfig = () => {
 }
 const extractInfos =  (filepath) => {
     jsdoc2md.render({ files: filepath }).then((f) => {
-        // if(filepath.includes("mask")){
+        // 提取文件时debugger
+        // if(filepath.includes("directive")){
         //     console.log(f);
         // }
         filterMd(f).then((new_f) =>{
