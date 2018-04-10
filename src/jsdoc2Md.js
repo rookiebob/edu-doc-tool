@@ -57,17 +57,14 @@ const getDocConfig = () => {
 
 }
 const extractInfos =  (filepath) => {
-    jsdoc2md.render({ files: filepath }).then((f) => {
-        // 提取文件时debugger
-        // if(filepath.includes("directive")){
-        //     console.log(f);
-        // }
-        filterMd(f).then((new_f) =>{
-            extractApis(filepath , new_f);
-            extractEvents(filepath ,new_f);
-        }).catch((err) => console.error(err))
+    var f = jsdoc2md.renderSync({ files: filepath })
+    var parsed = jsdoc2md.getTemplateDataSync({ files: filepath });
 
-    })
+    filterMd(f).then((new_f) =>{
+        extractApis(filepath , new_f);
+        extractEvents(filepath ,new_f);
+        extractMethods(filepath , parsed);
+    }).catch((err) => console.error(err))
 };
 
 //处理提取出来的md一些异常的情况
@@ -75,6 +72,35 @@ const filterMd = (f) =>{
     return new Promise((resolve) => {
         const new_f = f.replace(/\\\|/g , '');
         resolve(new_f);
+    })
+};
+
+//过滤拿出component.js的数据methods
+const extractMethods = (filepath , f) => {
+    let apiString = '\n### public methods'; 
+
+    function getParam (params){
+        var string = `\n| Param | Type | Default | Description |\n| --- | --- | --- | --- |`;
+        if(!params || params.length==0){
+            return '';
+        }
+        params.forEach(p => {
+            string += `\n| ${p.name || ''} | ${p.type.names.join(' ')} | ${p.defaultvalue||''} | ${p.description||''} |`
+        })
+
+        return string;
+    }
+
+    f.filter(obj => (obj.kind == 'function' && obj.access == 'public'))
+     .forEach((obj) => {
+        apiString += `\n\n#### ${obj.name}()\n\n${obj.description}\n\n${getParam(obj.params)}`;
+    });
+
+    if(!apiString) return;
+
+    fs.appendFile(ReadMePath , apiString , (err) => {
+        if (err) throw err;
+        console.log(`【${filepath}】 methods append success!`);
     })
 };
 
@@ -101,7 +127,7 @@ const extractEvents = (filepath ,f) => {
     const reg = /(###.*\n+\*\*Kind\*\*:\sevent.*(.*[\n\r\s])+)/i;
     let eventString = '';
 
-    //console.log('event test:' + reg.test(f));
+    // console.log('event test:' + reg.test(f));
 
     if(reg.test(f)){
         eventString = RegExp.$1;
