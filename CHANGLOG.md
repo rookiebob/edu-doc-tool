@@ -1,4 +1,4 @@
-### release(2.1.1)
+### release(2.2.1)
   
 - edu-doc-tool -g 支持public方法的提取
 - edu-doc-tool -v 支持查看edu-doc-tool版本
