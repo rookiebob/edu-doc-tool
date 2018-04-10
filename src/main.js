@@ -43,12 +43,16 @@ module.exports = function () {
         //生成api
         if(prog.genDoc){
             console.log(chalk.blue('***当前执行文档生成***'));
-            fs.readFile(ReadMePath, 'utf8' , (err, data) => {
+            try{
+                var data = fs.readFileSync(ReadMePath, 'utf8');
                 if(data.indexOf('### API') > 0){
                     data = data.slice(0 , data.indexOf('### API'));
                 }
-                fs.writeFile(ReadMePath , data + `\n### API\n`);
-            });
+                fs.writeFileSync(ReadMePath , data + `\n### API\n`);
+            }catch(err){
+                throw err;
+            }
+
             genDoc2md();
 
         }
