@@ -5,6 +5,7 @@ const chalk  = require('chalk');
 const lint = require('./lint.js');
 const genDoc2md  = require('./jsdoc2Md.js');
 const serveDoc  = require('./serveDoc.js');
+const package  = require('../package.json');
 const updateLintConfig  = require('./updateLintConfig.js');
 const fs = require('fs-extra');
 const prog = require('commander');
@@ -16,11 +17,12 @@ const ReadMePath = rootPath + '/README.md';
 module.exports = function () {
 
     function main(){
-        prog.version('0.0.1')
+        prog.version(package.version)
             .usage('npm run edu-doc-tool')
             .option('-l, --lint', '修正代码中错误的注释')
             .option('-g, --genDoc', '生成组件的readme文档')
             .option('-s, --serveDoc', '单个组件编写文档的时候，预览效果生成器')
+            .option('-v, --version', '查看版本号')
             .parse(process.argv);
 
 

@@ -1,3 +1,8 @@
+### release(2.1.1)
+  
+- edu-doc-tool -g 支持public方法的提取
+- edu-doc-tool -v 支持查看edu-doc-tool版本
+
 ### release(2.1.0)
   
 - edu-doc-tool -l 自动添加eslint 的 jsdoc-valid检测规则

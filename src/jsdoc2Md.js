@@ -77,7 +77,7 @@ const filterMd = (f) =>{
 
 //过滤拿出component.js的数据methods
 const extractMethods = (filepath , f) => {
-    let apiString = '\n### public methods'; 
+    let apiString = '\n### public methods\n';
 
     function getParam (params){
         var string = `\n| Param | Type | Default | Description |\n| --- | --- | --- | --- |`;
@@ -98,7 +98,7 @@ const extractMethods = (filepath , f) => {
 
     if(!apiString) return;
 
-    fs.appendFile(ReadMePath , apiString , (err) => {
+    fs.appendFileSync(ReadMePath , apiString , (err) => {
         if (err) throw err;
         console.log(`【${filepath}】 methods append success!`);
     })
@@ -116,7 +116,7 @@ const extractApis = (filepath , f) => {
     }
     if(!apiString) return;
 
-    fs.appendFile(ReadMePath , apiString , (err) => {
+    fs.appendFileSync(ReadMePath , apiString , (err) => {
         if (err) throw err;
         console.log(`【${filepath}】 apis append success!`);
     })
@@ -135,7 +135,7 @@ const extractEvents = (filepath ,f) => {
 
     if(!eventString) return;
 
-    fs.appendFile(ReadMePath , eventString , (err) => {
+    fs.appendFileSync(ReadMePath , eventString , (err) => {
         if(err) throw err;
         console.log(`【${filepath}】 events append success!`);
     })

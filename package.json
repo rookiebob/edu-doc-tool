@@ -1,6 +1,6 @@
 {
   "name": "edu-doc-tool",
-  "version": "2.1.1",
+  "version": "2.2.1",
   "description": "edu-doc-tool",
   "main": "index.js",
   "bin": {
