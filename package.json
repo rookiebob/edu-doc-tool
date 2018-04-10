@@ -1,6 +1,6 @@
 {
   "name": "edu-doc-tool",
-  "version": "1.1.0",
+  "version": "2.1.1",
   "description": "edu-doc-tool",
   "main": "index.js",
   "bin": {
@@ -21,13 +21,18 @@
   },
   "homepage": "https://github.com/rookiebob/edu-doc-tool#readme",
   "dependencies": {
-    "commander": "^2.11.0",
-    "glob": "^7.1.2",
-    "rd":"^1.1.2",
-    "jsdoc-to-markdown":"^3.0.2",
-    "ejs":"^2.5.7",
-    "fs-extra": "^0.30.0",
+    "bluebird": "^3.5.0",
     "chalk": "^2.1.0",
-    "bluebird": "^3.5.0"
+    "commander": "^2.11.0",
+    "ejs": "^2.5.7",
+    "fs-extra": "^0.30.0",
+    "glob": "^7.1.2",
+    "jsdoc-to-markdown": "^3.0.2",
+    "rd": "^1.1.2",
+    "babel-eslint": "^8.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.15.0",
+    "eslint-config-node": "^2.0.0"
   }
 }

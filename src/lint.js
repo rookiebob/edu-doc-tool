@@ -1,13 +1,14 @@
 const fs = require('fs');
+const chalk = require('chalk');
 
-function getRightFilePath(filePath){
+const getRightFilePath = (filePath) => {
     const reg = /((component-|cache-|module-).*)\..*/ig;
     reg.test(filePath);
     //console.log(RegExp.$1);
     return RegExp.$1;
 }
 
-function lintPath(filePath){
+const lintPath = (filePath) => {
     const fileContent = fs.readFileSync(filePath , 'utf8');
     const reg = /(@(method|member|module|class).*:?pool\/)([^\.\n]+)(\..+)?/ig;
     const _rightFilePath = getRightFilePath(filePath);
@@ -28,13 +29,28 @@ function lintPath(filePath){
             return result;
         }
     });
+    return res;
+};
 
-    fs.writeFileSync(filePath,res,'utf8',() => {
-        console.log('file rewrite success',filePath);
-    })
-
-
+const lintJsdoc = (res) => {
+    return res.replace(/@return\s/g , '@returns ').
+                replace('{Void}' , '{void}');
 };
 
 
-module.exports = lintPath;
+const lint = (filePath)=>{
+
+    //修正所有的注释路径错误
+    const res = lintPath(filePath);
+
+    //修正jsdoc的错误，相当于eslint --fix修复
+    const result = lintJsdoc(res);
+
+    fs.writeFile(filePath,result,'utf8',(err) => {
+        if (err) throw err;
+
+         console.log(chalk.green(`>>【${filePath}】eslint fix over && rewrite success`));
+    })
+}
+
+module.exports = lint;
