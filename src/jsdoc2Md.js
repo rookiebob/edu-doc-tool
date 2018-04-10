@@ -77,7 +77,7 @@ const filterMd = (f) =>{
 
 //过滤拿出component.js的数据methods
 const extractMethods = (filepath , f) => {
-    let apiString = '\n### public methods'; 
+    let apiString = '\n#### public methods\n'; 
 
     function getParam (params){
         var string = `\n| Param | Type | Default | Description |\n| --- | --- | --- | --- |`;
@@ -93,15 +93,17 @@ const extractMethods = (filepath , f) => {
 
     f.filter(obj => (obj.kind == 'function' && obj.access == 'public'))
      .forEach((obj) => {
-        apiString += `\n\n#### ${obj.name}()\n\n${obj.description}\n\n${getParam(obj.params)}`;
+        apiString += `\n\n##### ${obj.name}()\n\n${obj.description}\n\n${getParam(obj.params)}`;
     });
 
     if(!apiString) return;
 
-    fs.appendFile(ReadMePath , apiString , (err) => {
-        if (err) throw err;
+    try{
+        fs.appendFileSync(ReadMePath , apiString);
         console.log(`【${filepath}】 methods append success!`);
-    })
+    }catch(err){
+        if (err) throw err;
+    }
 };
 
 //过滤拿出component.js的数据api
@@ -116,10 +118,12 @@ const extractApis = (filepath , f) => {
     }
     if(!apiString) return;
 
-    fs.appendFile(ReadMePath , apiString , (err) => {
-        if (err) throw err;
+    try{
+        fs.appendFileSync(ReadMePath , apiString);
         console.log(`【${filepath}】 apis append success!`);
-    })
+    }catch(err){
+        if (err) throw err;
+    }
 };
 
 //过滤拿出component.js的event
@@ -135,10 +139,12 @@ const extractEvents = (filepath ,f) => {
 
     if(!eventString) return;
 
-    fs.appendFile(ReadMePath , eventString , (err) => {
-        if(err) throw err;
-        console.log(`【${filepath}】 events append success!`);
-    })
+    try{
+        fs.appendFileSync(ReadMePath , eventString);
+        console.log(`【${filepath}】events append success!`);
+    }catch(err){
+        if (err) throw err;
+    }
 };
 
 module.exports = genDoc2md;
